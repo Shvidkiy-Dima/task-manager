@@ -1,6 +1,8 @@
-from django.urls import path
-from .views import TestView
+from rest_framework.routers import SimpleRouter
+from .views import BoardUserView
 
-urlpatterns = [
-    path('', TestView.as_view())
-]
+router = SimpleRouter()
+
+router.register(r'user', BoardUserView)
+
+urlpatterns = router.urls
