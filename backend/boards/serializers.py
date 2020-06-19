@@ -6,7 +6,7 @@ class CardSerializer(ModelSerializer):
 
     class Meta:
         model = Card
-        fields = ['title', 'body', 'author', 'current_step']
+        fields = ['id', 'title', 'body', 'author', 'current_step']
 
 
 class StepSerializer(ModelSerializer):
@@ -15,7 +15,7 @@ class StepSerializer(ModelSerializer):
 
     class Meta:
         model = Step
-        fields = ['step_name', 'board', 'cards']
+        fields = ['id', 'step_name', 'board', 'cards']
 
 
 class BoardSerializer(ModelSerializer):
@@ -23,4 +23,4 @@ class BoardSerializer(ModelSerializer):
 
     class Meta:
         model = Board
-        fields = ['board_name', 'owner', 'steps']
+        fields = ['id', 'board_name', 'owner', 'steps']

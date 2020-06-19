@@ -41,12 +41,14 @@ INSTALLED_APPS = [
     'user_auth',
     'boards',
     'rest_framework',
-    'djoser'
+    'djoser',
+    'corsheaders'
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -135,3 +137,6 @@ REST_FRAMEWORK = {
 SIMPLE_JWT = {
    'AUTH_HEADER_TYPES': ('JWT',),
 }
+
+# CORS
+CORS_ORIGIN_ALLOW_ALL = True
