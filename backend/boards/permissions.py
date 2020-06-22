@@ -7,16 +7,22 @@ class BoardPerm(BasePermission):
         if request.method == 'GET':
             return request.user in obj.participants.all()
 
-        return request.user == obj.owner
+        return request.user == obj.author
 
 
 class StepPerm(BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        if request.method == 'GET':
+            return request.user in obj.board.participants.all()
+
+        return request.user == obj.board.author
 
     def has_permission(self, request, view):
         if request.method in ['POST', 'DELETE', 'PUT', 'PATCH']:
             board_id = request.data['board']
             board = Board.objects.get(pk=int(board_id))
-            return request.user == board.owner
+            return request.user == board.author
 
         return True
 
@@ -35,4 +41,4 @@ class CardPerm(BasePermission):
         if request.method == 'GET':
             return request.user in obj.current_step.board.participants.all()
 
-        return request.user == obj.current_step.board.owner or request.user == obj.author
+        return request.user == obj.current_step.board.author or request.user == obj.author
