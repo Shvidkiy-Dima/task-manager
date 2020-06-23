@@ -20,7 +20,7 @@ function Login(){
   function login(e){
     e.preventDefault();
 
-  axios.post(`http://localhost:8000/auth/jwt/create`, {username, password})
+  axios.post(`/auth/jwt/create`, {username, password})
   .then(res => {
     sessionStorage.setItem('access', res.data.access)
     sessionStorage.setItem('refresh', res.data.refresh)

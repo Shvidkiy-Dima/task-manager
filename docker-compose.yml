@@ -1,0 +1,18 @@
+version: '3'
+services:
+
+  frontend:
+    build: ./frontend
+    image: frontend
+    depends_on:
+        - backend
+    ports:
+      - "3000:3000"
+    stdin_open: true
+
+  backend:
+        build: ./backend
+        image: backend
+        command: bash boot.sh
+        ports:
+          - "8000:8000"

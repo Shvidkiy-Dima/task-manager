@@ -10,7 +10,7 @@ function Invite(){
   React.useEffect(()=>{
     Request({
       method: 'get',
-      url: 'http://localhost:8000/invite/' + id
+      url: '/invite/' + id
     },
   (res)=>{
   })

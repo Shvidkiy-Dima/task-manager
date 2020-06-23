@@ -6,8 +6,9 @@ import OneBoard from './components/one_board'
 import MainPage from './components/main_page'
 import { Switch, Route, BrowserRouter} from "react-router-dom";
 
-function App() {
 
+
+function App() {
     return (
       <div className="App">
       <BrowserRouter>

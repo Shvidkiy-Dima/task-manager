@@ -1,0 +1,12 @@
+
+htmlcov
+.coverage
+*.log
+*.env
+.git
+.gitignore
+docker-compose.yml
+Dockerfile
+mysql_data
+__pycache__
+docker-compose-tests.yml

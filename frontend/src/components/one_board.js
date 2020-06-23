@@ -29,7 +29,7 @@ function OneBoard(){
 
   React.useEffect(()=>{
     Request({method: 'get',
-            url: 'http://localhost:8000/boards/' + board_id,
+            url: '/boards/' + board_id,
             },
         (res)=>{
             setBoardName(res.data.title)
@@ -91,7 +91,7 @@ const hideModal = () => {
       <Button onClick={()=>{
         Request({
           method: 'post',
-          url: 'http://localhost:8000/invite/',
+          url: '/invite/',
           data: {board: board_id}
         }, (res)=>{
         let path = new URL(res.data.link).pathname
@@ -112,7 +112,7 @@ const hideModal = () => {
     onLaneDelete={(lane_id)=>{
       Request({
         method: 'delete',
-        url: 'http://localhost:8000/steps/' + lane_id + '/',
+        url: '/steps/' + lane_id + '/',
         data: {
           board: board_id
         }
@@ -124,7 +124,7 @@ const hideModal = () => {
     onLaneUpdate={(lane_id, data)=>{
       Request({
         method: 'patch',
-        url: 'http://localhost:8000/steps/' + lane_id + '/',
+        url: '/steps/' + lane_id + '/',
         data: {
           board: board_id,
           title: data.title
@@ -137,7 +137,7 @@ const hideModal = () => {
       console.log(removedIndex, addedIndex, payload)
       Request({
         method: 'patch',
-        url: 'http://localhost:8000/steps/' + payload.id + '/',
+        url: '/steps/' + payload.id + '/',
         data: {
           board: board_id,
           position: addedIndex
@@ -150,7 +150,7 @@ const hideModal = () => {
       console.log(params)
       Request({
         method: 'post',
-        url: 'http://localhost:8000/steps/',
+        url: '/steps/',
         data: {board: board_id,
               title: params.title}
       }, (res)=>{
@@ -163,7 +163,7 @@ const hideModal = () => {
     (fromLaneId, targetLaneId, cardId)=>{
 
       Request({method: 'patch',
-              url: 'http://localhost:8000/cards/' + cardId + '/',
+              url: '/cards/' + cardId + '/',
               data: {
                 current_step: targetLaneId
               }
@@ -175,7 +175,7 @@ const hideModal = () => {
     onCardClick={(cardId)=>{
       Request({
         method: 'get',
-        url: 'http://localhost:8000/cards/' + cardId,
+        url: '/cards/' + cardId,
       },
     (res)=>{
       setCardTitle(res.data.title)
@@ -189,7 +189,7 @@ const hideModal = () => {
       (card, laneId)=>{
         Request({
           method: 'post',
-          url: 'http://localhost:8000/cards/',
+          url: '/cards/',
           data: {
             current_step: laneId,
             title: card.title,
@@ -233,7 +233,7 @@ const hideModal = () => {
         <button onClick={()=>{
             Request({
               method: 'patch',
-              url: 'http://localhost:8000/cards/' + card_id +'/',
+              url: '/cards/' + card_id +'/',
               data: {
                 title: card_title,
                 body: card_body
@@ -248,7 +248,7 @@ const hideModal = () => {
           ()=>{
              Request({
                method: 'delete',
-               url: 'http://localhost:8000/cards/' + card_id
+               url: '/cards/' + card_id
              },
            (res)=>{
              window.location.reload();

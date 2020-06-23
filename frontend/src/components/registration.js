@@ -19,7 +19,7 @@ function Registration(){
   function registration(e){
     e.preventDefault();
 
-  axios.post(`http://localhost:8000/auth/users/`, {username, password})
+  axios.post(`/auth/users/`, {username, password})
   .then(res => {
     history.push('/login')
   });

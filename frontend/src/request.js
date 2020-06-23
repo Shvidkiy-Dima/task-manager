@@ -13,7 +13,7 @@ function Request(config, callback){
         (err)=>{
           console.log(err)
         if (err.response.status === 401 && refresh_token){
-          axios.post('http://localhost:8000/auth/jwt/refresh', {refresh: refresh_token}).then(
+          axios.post('/auth/jwt/refresh', {refresh: refresh_token}).then(
             (res)=>{
               sessionStorage.setItem('access', res.data.access)
               config.headers = {Authorization: 'JWT ' + res.data.access}

@@ -16,7 +16,7 @@ function _MainPage(){
   const history = useHistory();
   React.useEffect(()=>{
       Request({method: 'get',
-              url: 'http://localhost:8000/boards',
+              url: '/boards',
     }, (res)=>{
         PushBoards(res.data.all_boards)
 
@@ -53,13 +53,12 @@ function _MainPage(){
             </div>
           ))}
           </Carousel>
-
           <div className="col-md-3 border">
                 <form onSubmit={(e)=>{
                         e.preventDefault();
                   Request({
                     method: 'post',
-                    url: 'http://localhost:8000/boards/',
+                    url: '/boards/',
                     data: {title: board_title}
                   }, (res)=>{
                     history.push('/board/' + res.data.id)
@@ -89,7 +88,7 @@ function MainPage(){
   React.useEffect(()=>{
         Request({
           method: 'get',
-          url: 'http://localhost:8000/auth/users/me/'
+          url: '/auth/users/me/'
         },
       (res)=>{
         SetUsername(res.data.username)
