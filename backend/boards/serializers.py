@@ -7,7 +7,7 @@ class CardSerializer(ModelSerializer):
 
     class Meta:
         model = Card
-        fields = ['id', 'title', 'body', 'author', 'current_step']
+        fields = ['id', 'title', 'body', 'author', 'current_step', 'creation_date']
 
 
 class StepSerializer(ModelSerializer):

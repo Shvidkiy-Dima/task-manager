@@ -20,7 +20,7 @@ class Board(BaseBoard):
 class Step(BaseBoard):
 
     board = models.ForeignKey(Board, on_delete=models.CASCADE, related_name='steps')
-    position = models.IntegerField(default=lambda: Step.objects.order_by('position').last().position + 1)
+    position = models.IntegerField()
 
 
 

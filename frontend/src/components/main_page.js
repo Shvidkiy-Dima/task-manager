@@ -11,7 +11,7 @@ import 'react-multi-carousel/lib/styles.css';
 
 function _MainPage(){
   const [boards, PushBoards] = React.useState([])
-  const [board_name, SetBoardName] = React.useState([])
+  const [board_title, SetBoardTitle] = React.useState([])
   const [user, SetUsername] = React.useState([])
   const history = useHistory();
   React.useEffect(()=>{
@@ -45,30 +45,41 @@ function _MainPage(){
 
   return (<div>
           <Carousel responsive={responsive}>
-
           {boards.map(board => (
             <div class="card bg-warning" key={board.id}>
               <div class="card-body">
               <Link to={`/board/` + board.id}>{board.title}</Link>
               </div>
             </div>
-
           ))}
           </Carousel>
-          <button onClick={()=>{
-            Request({
-              method: 'post',
-              url: 'http://localhost:8000/boards/',
-              data: {title: board_name}
-            }, (res)=>{
-              history.push('/board/' + res.data.id)
-            })
-          }}> Create new board </button>
 
-                <input type='text' onChange={(e)=>{
-                  SetBoardName(e.target.value)
-                }}
-                />
+          <div className="col-md-3 border">
+                <form onSubmit={(e)=>{
+                        e.preventDefault();
+                  Request({
+                    method: 'post',
+                    url: 'http://localhost:8000/boards/',
+                    data: {title: board_title}
+                  }, (res)=>{
+                    history.push('/board/' + res.data.id)
+                  })
+
+                }}>
+                        <div className="form-group">
+                            <label>Board title</label>
+                            <input
+                            type="text"
+                            className="form-control"
+                            name="username"
+                            value={board_title}
+                            onChange={(e)=>{
+                              SetBoardTitle(e.target.value)
+                            }}/>
+                        </div>
+                        <button type="submit" className="btn btn-primary btn-block">Create new board</button>
+                    </form>
+              </div>
     </div>)
 }
 
@@ -87,8 +98,8 @@ function MainPage(){
 
   return (<div>
       <BoardNavbar username={user}/>
-      <PrivateRoute path="/" component={_MainPage}/>
-      <PrivateRoute path='/board/:id' component={OneBoard}/>
+      <PrivateRoute exact path="/" component={_MainPage}/>
+      <PrivateRoute  exact path='/board/:board_id' component={OneBoard}/>
       <PrivateRoute path='/invite/:id' component={Invite}/>
     </div>)
 }

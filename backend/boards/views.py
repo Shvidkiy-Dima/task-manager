@@ -1,3 +1,4 @@
+from django.db.models import F
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -32,11 +33,19 @@ class StepView(mixins.CreateModelMixin,
     def perform_update(self, serializer):
         position = self.request.data.get('position')
         if position:
-            another_step = Step.objects.get(position=position)
+            another_step = Step.objects.filter(board_id=serializer.instance.board_id).get(position=position)
             another_step.position = serializer.instance.position
             another_step.save(update_fields=['position'])
         serializer.save()
 
+    def perform_create(self, serializer):
+        position = Step.objects.order_by('position').last().position + 1
+        serializer.save(position=position)
+
+    def perform_destroy(self, instance):
+        position = instance.position
+        Step.objects.filter(position__gt=position).update(position=F('position')-1)
+        instance.delete()
 
 class CardView(CreateAuthorModelMixin,
                mixins.RetrieveModelMixin,

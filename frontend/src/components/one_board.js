@@ -9,10 +9,12 @@ import ModalHeader from "react-bootstrap/ModalHeader";
 import ModalFooter from "react-bootstrap/ModalFooter";
 import ModalTitle from "react-bootstrap/ModalTitle";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Dropdown from 'react-bootstrap/Dropdown'
+import { Navbar,Nav,NavDropdown,Form,FormControl,Button } from 'react-bootstrap'
+
 
 function OneBoard(){
-    let {id} = useParams()
+    let {board_id} = useParams()
+  const [board_rerend, setBoardRerend] = React.useState(false)
   const [board_name, setBoardName] = React.useState('')
   const [board_perm, setBoardPerm] = React.useState(false)
   const [board_author, setBoardAuthor] = React.useState('')
@@ -27,7 +29,7 @@ function OneBoard(){
 
   React.useEffect(()=>{
     Request({method: 'get',
-            url: 'http://localhost:8000/boards/' + id,
+            url: 'http://localhost:8000/boards/' + board_id,
             },
         (res)=>{
             setBoardName(res.data.title)
@@ -48,7 +50,8 @@ function OneBoard(){
                             step_data.cards.push({
                             id: card.id,
                             title: card.title,
-                            description: card.body
+                            description: card.body,
+                            label: card.author.username
                             })
                           }
               board_data.lanes.push(step_data)
@@ -57,7 +60,7 @@ function OneBoard(){
       }
       )
 
-  }, [id])
+  }, [board_id, board_rerend])
 
 
 const showModal = () => {
@@ -70,52 +73,39 @@ const hideModal = () => {
 
 
   return (<div>
-    <h1> { board_name} </h1>
-    <h1> { board_author } </h1>
-    <Dropdown>
-  <Dropdown.Toggle variant="success" id="dropdown-basic">
-    Users
-  </Dropdown.Toggle>
-
-  <Dropdown.Menu>
-    {participants.map(user => (
-        <Dropdown.Item>{user.username}</Dropdown.Item>
-    ))}
-  </Dropdown.Menu>
-</Dropdown>
-
-
-        {board_perm ?
-          <>
-          <button onClick={()=>{
-            Request({
-              method: 'post',
-              url: 'http://localhost:8000/invite/',
-              data: {board: id}
-            }, (res)=>{
-            let path = new URL(res.data.link).pathname
-             setLink(window.location.protocol + '//' + window.location.host + path)
-            })
-          }}> Invite link </button>
-        <input type='text' value={link}/>
-
-        <button onClick={()=>{
-          Request({
-            method: 'post',
-            url: 'http://localhost:8000/steps/',
-            data: {board: id,
-                  title: 'new step'}
-          }, (res)=>{
-              window.location.reload()
-          })
-        }}> New step </button>
-        </>
-          : <div></div>}
-
-
+    <Navbar bg="light" variant="light" expand="lg">
+      <Navbar.Brand>{ board_name}</Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+          <Navbar.Collapse id="basic-navbar-nav">
+            <Nav className="mr-auto">
+              <Nav.Link>{board_author}</Nav.Link>
+              <NavDropdown title="Users" >
+              {participants.map(user => (
+                  <NavDropdown.Item>{user.username}</NavDropdown.Item>
+              ))}
+              </NavDropdown>
+              {board_perm ?
+                <>
+                <Form inline>
+      <FormControl type="text" value={link} className="mr-sm-2" />
+      <Button onClick={()=>{
+        Request({
+          method: 'post',
+          url: 'http://localhost:8000/invite/',
+          data: {board: board_id}
+        }, (res)=>{
+        let path = new URL(res.data.link).pathname
+         setLink(window.location.protocol + '//' + window.location.host + path)
+        })
+      }} variant="outline-success">Invite link</Button>
+              </Form>
+              </>
+                  : <div></div>}
+              </Nav>
+        </Navbar.Collapse>
+   </Navbar>
 
     <Board data={data}
-
     editLaneTitle={board_perm}
     draggable={board_perm}
     canAddLanes={board_perm}
@@ -124,10 +114,10 @@ const hideModal = () => {
         method: 'delete',
         url: 'http://localhost:8000/steps/' + lane_id + '/',
         data: {
-          board: id
+          board: board_id
         }
       }, (res)=>{
-          window.location.reload()
+          setBoardRerend(!board_rerend)
       })
     }}
 
@@ -136,11 +126,11 @@ const hideModal = () => {
         method: 'patch',
         url: 'http://localhost:8000/steps/' + lane_id + '/',
         data: {
-          board: id,
+          board: board_id,
           title: data.title
         }
       }, (res)=>{
-
+          setBoardRerend(!board_rerend)
       })
     }}
     handleLaneDragEnd={(removedIndex, addedIndex, payload)=>{
@@ -149,11 +139,22 @@ const hideModal = () => {
         method: 'patch',
         url: 'http://localhost:8000/steps/' + payload.id + '/',
         data: {
-          board: id,
+          board: board_id,
           position: addedIndex
         }
       }, (res)=>{
 
+      })
+    }}
+    onLaneAdd={(params)=>{
+      console.log(params)
+      Request({
+        method: 'post',
+        url: 'http://localhost:8000/steps/',
+        data: {board: board_id,
+              title: params.title}
+      }, (res)=>{
+          setBoardRerend(!board_rerend)
       })
     }}
     hideCardDeleteIcon={true}
@@ -161,10 +162,8 @@ const hideModal = () => {
     onCardMoveAcrossLanes={
     (fromLaneId, targetLaneId, cardId)=>{
 
-      let id = !isNaN(cardId) ? cardId : card_id
-
       Request({method: 'patch',
-              url: 'http://localhost:8000/cards/' + id + '/',
+              url: 'http://localhost:8000/cards/' + cardId + '/',
               data: {
                 current_step: targetLaneId
               }
@@ -197,7 +196,7 @@ const hideModal = () => {
             body: card.description
           }
         },(res)=>{
-          setCardId(res.data.id)
+          setBoardRerend(!board_rerend)
         })
       }
     }
