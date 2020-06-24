@@ -1,4 +1,7 @@
 # task-manager
 
-### simple kanban board
-### Deploy: ./start.sh
+## Features
+* Simple kanban board
+
+## Deploy
+* ./start.sh 
